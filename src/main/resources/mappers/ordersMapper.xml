@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OrdersMapper">
+
+	<select id="readOrders" parameterType="string" resultType="orders">
+		SELECT * FROM orders WHERE member_id = #{id} ORDER BY order_date DESC
+	</select>
+	
+	<select id="readOrderDetail" parameterType="string" resultType="orders">
+		SELECT * FROM orders WHERE member_id = #{id}
+	</select>
+	
+	<insert id="insertOrders">
+		INSERT INTO orders(order_no, order_type, price, order_date, member_id)
+		VALUES((SELECT nvl(max(order_no), 0)+1 as order_no FROM orders), #{order_type}, #{price}, sysdate, #{member_id})
+	</insert>
+</mapper>

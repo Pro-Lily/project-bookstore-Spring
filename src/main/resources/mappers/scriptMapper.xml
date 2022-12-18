@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ScriptMapper">
+
+	<insert id="insertScript">
+		INSERT INTO script(script_no, script_title, script_contents, script_image, author, category_no, member_id, script_date)
+		VALUES ((SELECT nvl(max(script_no), 0)+1 as script_no from script), #{script_title}, #{script_contents}, #{script_image}, #{author}, #{category_no}, #{member_id}, sysdate)
+	</insert>
+	
+	<select id="countScript" resultType="int">
+		SELECT count(*) FROM script
+	</select>
+	
+	<select id="listScript" parameterType="hashmap" resultType="script">
+		<![CDATA[
+		SELECT *
+		FROM (SELECT rownum as rn, A.*
+			  FROM (SELECT * FROM script ORDER BY script_no DESC) A
+			  WHERE rownum <= #{end})
+		WHERE rn >= #{begin}
+		]]>
+	</select>
+	
+	<update id="updateHit" parameterType="int">
+		UPDATE script
+		SET script_hit = script_hit + 1
+		WHERE script_no=#{script_no}
+	</update>
+	
+	<select id="getScript" parameterType="int" resultType="script">
+		SELECT * FROM script WHERE script_no=#{script_no}
+	</select>
+	
+	<delete id="deleteScript" parameterType="script">
+		DELETE FROM script
+		WHERE script_no=#{script_no}
+	</delete>
+
+	<select id="getMyScripts" parameterType="hashmap" resultType="script">
+		SELECT *
+		FROM script
+		WHERE member_id=#{id}
+		Order by script_date DESC
+	</select>
+
+	<update id="updateScript" parameterType="script">
+		UPDATE script
+		SET category_no=#{category_no}, author=#{author}, script_title=#{script_title}, script_contents=#{script_contents}, script_image=#{script_image}
+		WHERE script_no=#{script_no}
+	</update>
+	
+</mapper>

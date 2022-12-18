@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CartMapper">
+
+	<select id="readCart" parameterType="string" resultType="cart">
+		SELECT * FROM cart c, book b WHERE c.book_no = b.book_no AND c.member_id = #{id}
+	</select>
+	
+	<delete id="deleteCart" parameterType="cart">
+		DELETE FROM cart
+		WHERE cart_no=#{cart_no}
+	</delete>
+	
+	<select id="totalPrice" parameterType="string" resultType="int">
+		SELECT SUM(total_price) FROM cart WHERE member_id = #{id}
+	</select>
+	
+</mapper>

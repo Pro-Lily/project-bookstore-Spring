@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<typeAlias alias="book" type="com.triple.webapp.dto.BookDTO"/>
+		<typeAlias alias="cart" type="com.triple.webapp.dto.CartDTO"/>
+		<typeAlias alias="category" type="com.triple.webapp.dto.CategoryDTO"/>
+		<typeAlias alias="member" type="com.triple.webapp.dto.MemberDTO"/>
+		<typeAlias alias="orders" type="com.triple.webapp.dto.OrdersDTO"/>
+		<typeAlias alias="pager" type="com.triple.webapp.dto.PagerDTO"/>
+		<typeAlias alias="purchase" type="com.triple.webapp.dto.PurchaseDTO"/>
+		<typeAlias alias="review" type="com.triple.webapp.dto.ReviewDTO"/>
+		<typeAlias alias="script" type="com.triple.webapp.dto.ScriptDTO"/>
+	</typeAliases>
+</configuration>

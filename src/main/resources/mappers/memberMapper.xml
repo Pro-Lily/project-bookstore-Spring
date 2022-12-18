@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MemberMapper">
+
+	<select id="login" resultType="String">
+		SELECT member_name
+		FROM member
+		WHERE member_id=#{member_id} AND member_pwd=#{member_pwd}
+	</select>
+
+	<select id="viewMember" resultType="member">
+		SELECT *
+		FROM member
+		WHERE
+		member_id=#{member_id} AND member_pwd=#{member_pwd}
+	</select>
+
+	<insert id="insert" parameterType="member">
+		INSERT INTO member(member_id,
+		member_pwd, member_pwd_ck, member_name, member_email, member_postno,
+		member_address, member_detail_address, member_tel, member_role, member_enabled, regdate,
+		updatedate)
+		VALUES (#{member_id},#{member_pwd},#{member_pwd_ck},
+		#{member_name},#{member_email},#{member_postno},#{member_address}, #{member_detail_address}, #{member_tel},#{member_role},
+		#{member_enabled}, sysdate, sysdate)
+	</insert>
+
+	<select id="getMyInfo" resultType="member">
+		SELECT *
+		FROM member
+		WHERE
+		member_id=#{member_id}
+	</select>
+
+	<update id="updateMyInfo" parameterType="member">
+		UPDATE member
+		SET member_name = #{member_name}, member_email = #{member_email},
+		 member_postno = #{member_postno}, member_address = #{member_address},
+		 member_tel = #{member_tel}, updatedate = sysdate
+		WHERE member_id = #{member_id}
+	</update>
+	
+	<delete id="deleteMyInfo"  parameterType="member">
+		DELETE FROM member
+		WHERE member_id = #{member_id} 
+	</delete>
+
+	<select id="findUserById" resultType="String">
+		select member_id
+		from member
+		where member_id = #{id}
+	</select>
+</mapper>

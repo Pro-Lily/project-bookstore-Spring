@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BookMapper">
+	<insert id="insert" parameterType="book">
+		insert into book(category_no, book_no, book_title, book_contents, author, publisher, book_image, price, book_hit, pub_date)
+		values (#{category_no}, (SELECT nvl(max(book_no), 0)+1 as book_no from book), #{book_title}, #{book_contents}, #{author}, #{publisher}, #{book_image}, #{price}, #{book_hit}, sysdate)
+	</insert>
+	<select id="selectAll" resultType="book">
+		select book_no, book_title, book_contents, book_image, book_hit, author, publisher, price, pub_date, category_no, book_count
+		from book
+	</select>
+	
+	<select id="selectCategory" resultType="book" parameterType="int">
+		select book_no, book_title, book_contents, book_image, book_hit, author, publisher, price, pub_date, category_no, book_count
+		from book
+		where category_no = #{no}
+		order by pub_date desc
+	</select>
+	
+	<select id="selectBookNo" resultType="book" parameterType="int">
+		select *
+		from book
+		where book_no = #{no}
+	</select>
+	
+	<update id="update" parameterType="book">
+		update book
+		set book_title=#{book_title}, 
+			book_contents=#{book_contents}, 
+			book_image=#{book_image}, 
+			author=#{author}, 
+			publisher=#{publisher}, 
+			price=#{price}, 
+			category_no=#{category_no}
+		where book_no = #{book_no}
+	</update>
+	
+	<update id="updateNoImage" parameterType="book">
+		update book
+		set book_title=#{book_title}, 
+			book_contents=#{book_contents},  
+			author=#{author}, 
+			publisher=#{publisher}, 
+			price=#{price}, 
+			category_no=#{category_no}
+		where book_no = #{book_no}
+	</update>
+	
+	
+	<delete id="deleteByNo" parameterType="int">
+		delete from book
+		where book_no = #{book_no}
+	</delete>
+	
+	<update id="updateCount" parameterType="book">
+		UPDATE book
+		SET book_count = #{book_count}
+		WHERE book_no = #{book_no}
+	</update>
+	
+	<insert id="insertCart" parameterType="book">
+		INSERT INTO cart(cart_no, member_id, book_no, total_price)
+		VALUES ((SELECT nvl(max(cart_no), 0)+1 AS cart_no FROM cart), #{member_id}, #{book_no}, #{price}*#{book_count}) 
+	</insert>
+	
+	<select id="countAll" resultType="int">
+		select count(*)
+		from book
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*)
+		from book
+		where category_no = #{no}
+	</select>
+	
+	<select id="selectByPage" parameterType="pager" resultType="book">
+		select num, book_no, book_title, book_contents, book_image, book_hit, author, publisher, price, pub_date, category_no, book_count
+		from (select rownum as num, book_no, book_title, book_contents, book_image, book_hit, author, publisher, price, pub_date, category_no, book_count
+		      from(select book_no, book_title, book_contents, book_image, book_hit, author, publisher, price, pub_date, category_no, book_count
+		           from book
+		           order by book_no desc)
+		      where rownum &lt;= #{endRowNo})
+		where num &gt;= #{startRowNo}
+	</select>
+	
+	<select id="selectCategoryByPage" parameterType="map" resultType="book">
+		select num, book_no, book_title, book_contents, book_image, book_hit, author, publisher, price, pub_date, category_no, book_count
+		from (select rownum as num, book_no, book_title, book_contents, book_image, book_hit, author, publisher, price, pub_date, category_no, book_count
+		      from(select book_no, book_title, book_contents, book_image, book_hit, author, publisher, price, pub_date, category_no, book_count
+		           from book
+		           where category_no = #{no}
+		           order by book_no desc)
+		      where rownum &lt;= #{pager.endRowNo})
+		where num &gt;= #{pager.startRowNo}
+	</select>
+	
+</mapper>
